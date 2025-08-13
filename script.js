@@ -6,10 +6,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const hardBtn = document.getElementById('hard-btn');
     const newGameBtn = document.getElementById('new-game-btn');
     const messageArea = document.getElementById('message-area');
+    const toggleMusicBtn = document.getElementById('toggle-music-btn');
 
     let board = [];
     let selectedCell = null;
     let originalBoard = [];
+    let player;
+    let isMusicPlaying = false;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '0', // Oculta el reproductor
+            width: '0',  // Oculta el reproductor
+            videoId: 'dQw4w9WgXcQ', // ID de video de YouTube (¡un clásico!)
+            playerVars: {
+                'playsinline': 1,
+                'autoplay': 0, // No reproducir automáticamente
+                'controls': 0, // Ocultar los controles del reproductor
+                'mute': 0,
+                'loop': 1,
+            },
+            events: {
+                'onReady': onPlayerReady
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        toggleMusicBtn.addEventListener('click', () => {
+            if (isMusicPlaying) {
+                player.pauseVideo();
+                toggleMusicBtn.textContent = '🎶 Música (Apagada)';
+                isMusicPlaying = false;
+            } else {
+                player.playVideo();
+                toggleMusicBtn.textContent = '🎶 Música (Encendido)';
+                isMusicPlaying = true;
+            }
+        });
+    }
+
+    window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
 
     // Lógica para generar el tablero de Sudoku completo y válido
     function generateSolvedSudoku() {
